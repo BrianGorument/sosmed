@@ -5,6 +5,8 @@
 *.so
 bin/
 build/
+.mod
+.sum
 
 # Vendor directory
 vendor/
