@@ -6,7 +6,9 @@ import (
 	"sosmed/config"
 	"sosmed/database"
 	"sosmed/logger"
-	"sosmed/routes"
+	"sosmed/src/users"
+
+	"github.com/gin-gonic/gin"
 )
 
 func main() {
@@ -24,11 +26,16 @@ func main() {
 		log.Fatal("Failed to initialize database:", err)
 	}
 
-	// Initialize Routes
-	router := routes.InitRoutes(db, log)
+	// Initialize Gin Router
+	router := gin.Default()
+
+	// Register User Routes
+	users.RegisterRoutes(router, db, log)
 
 	// Start Server
-	if err := router.Run(":8030"); err != nil {
+	port := ":8888"
+	log.Infof("Starting server on %s", port)
+	if err := router.Run(port); err != nil {
 		log.Fatal("Failed to start server:", err)
 	}
 }
