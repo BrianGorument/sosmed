@@ -33,6 +33,10 @@ func SendErrorResponse(ctx *gin.Context, httpCode int, errStruct ErrorStruct) {
 	ctx.JSON(httpCode, errStruct)
 }
 
+func SendResponseSuccess(ctx *gin.Context, httpCode int, SuccessStruct Response) {
+	ctx.JSON(httpCode, SuccessStruct)
+}
+
 // ErrorHandler menangani error dalam controller
 func ErrorHandler(ctx *gin.Context, logger *logrus.Logger, req interface{}, err error) {
 	logger.Error("Error processing request:", err)
