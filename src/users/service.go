@@ -1,6 +1,12 @@
 package users
 
-import "errors"
+import (
+	"errors"
+	"fmt"
+	"sosmed/shared/utils"
+
+	"github.com/go-playground/validator/v10"
+)
 
 // userService struct
 type userService struct {
@@ -14,7 +20,6 @@ func NewUserService(repo IUserRepository) IUserService {
 
 // Implementasi UserService
 func (s *userService) RegisterUser(req CreateUserRequest) (*UserResponse, error) {
-	// Cek apakah email sudah ada
 	existingUsers, _ := s.repo.FindAll()
 	for _, u := range existingUsers {
 		if u.Email == req.Email {
@@ -22,18 +27,28 @@ func (s *userService) RegisterUser(req CreateUserRequest) (*UserResponse, error)
 		}
 	}
 
-	// Simpan user baru
-	user := User{
-		Username: req.Username,
-		Email:    req.Email,
-		Password: req.Password, // Hashing password seharusnya di sini
+	hashedPassword, _ := utils.HashPassword(req.Password)
+	validate := validator.New()
+	validEmail := req.Email
+
+	err := validate.Struct(validEmail)
+	if err != nil {
+		fmt.Println("Invalid email:", err)
+		return nil, errors.New("invalid Email Format")
 	}
-	err := s.repo.Create(&user)
+	user := User{
+		Username:  req.Username,
+		Email:     validEmail,
+		Password:  hashedPassword,
+		Role_code: req.Role_code,
+		FirstName: req.FirstName,
+		LastName:  req.LastName,
+	}
+	err = s.repo.Create(&user)
 	if err != nil {
 		return nil, err
 	}
 
-	// Kembalikan response
 	return &UserResponse{ID: user.ID, Username: user.Username, Email: user.Email}, nil
 }
 
