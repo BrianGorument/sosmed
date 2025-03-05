@@ -4,6 +4,7 @@ import (
 	"errors"
 	"fmt"
 	"sosmed/shared/utils"
+	"time"
 
 	"github.com/go-playground/validator/v10"
 )
@@ -26,23 +27,25 @@ func (s *userService) RegisterUser(req CreateUserRequest) (*UserResponse, error)
 			return nil, errors.New("email already registered")
 		}
 	}
-
 	hashedPassword, _ := utils.HashPassword(req.Password)
 	validate := validator.New()
-	validEmail := req.Email
-
-	err := validate.Struct(validEmail)
+	err := validate.Var(req.Email, "required,email")
 	if err != nil {
 		fmt.Println("Invalid email:", err)
 		return nil, errors.New("invalid Email Format")
 	}
+
+	timenow := time.Now()
+
 	user := User{
 		Username:  req.Username,
-		Email:     validEmail,
+		Email:     req.Email,
 		Password:  hashedPassword,
 		Role_code: req.Role_code,
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
+		CreatedAt: timenow,
+		UpdatedAt: timenow,
 	}
 	err = s.repo.Create(&user)
 	if err != nil {
@@ -68,4 +71,19 @@ func (s *userService) GetAllUsers() ([]UserResponse, error) {
 	}
 
 	return userResponses, nil
+}
+
+func (s *userService) LoginUser(req CreateUserRequest) (*UserResponse, error) {
+	existingUsers, _ := s.repo.FindAll()
+	for _, u := range existingUsers {
+		if u.Email == req.Email {
+			return &UserResponse{
+				ID:       u.ID,
+				Username: u.Username,
+				Email:    u.Email,
+			}, nil
+		}
+	}
+
+	return nil, errors.New("user not found")
 }

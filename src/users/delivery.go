@@ -80,3 +80,34 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 	}
 	response.SendResponseSuccess(c, http.StatusCreated, succesresp)
 }
+
+func (h *UserHandler) LoginUser(c *gin.Context) {
+	var req CreateUserRequest
+	if err := c.ShouldBindJSON(&req); err != nil {
+		h.logger.Warn("Invalid request:", err)
+		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body request"})
+		return
+	}
+
+	user, err := h.service.LoginUser(req)
+	if err != nil {
+		h.logger.Error("Failed to register user:", err)
+		resp := response.ErrorStruct{
+			Description:        response.DescriptionFailed,
+			Message:            err.Error(),
+			MessageDescription: "Failed to register user",
+			Data:               err,
+		}
+		response.SendErrorResponse(c, http.StatusBadRequest, resp)
+		return
+	}
+
+	succesresp := response.Response{
+		ResponseCode:       response.RCSuccess,
+		Description:        response.DescriptionSuccess,
+		Message:            response.DataSuccess,
+		MessageDescription: "Successfully registered user",
+		Data:               user,
+	}
+	response.SendResponseSuccess(c, http.StatusCreated, succesresp)
+}

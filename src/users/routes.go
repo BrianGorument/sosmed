@@ -18,5 +18,6 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, log *logrus.Logger) {
 
 		usersGroup.GET("/", handler.GetAllUsers)
 		usersGroup.POST("/register", handler.RegisterUser)
+		usersGroup.POST("/login", handler.LoginUser)
 	}
 }

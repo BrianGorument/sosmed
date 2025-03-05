@@ -2,7 +2,11 @@ module sosmed
 
 go 1.23.1
 
-require github.com/spf13/viper v1.19.0
+require (
+	github.com/go-playground/validator/v10 v10.20.0
+	github.com/spf13/viper v1.19.0
+	golang.org/x/crypto v0.31.0
+)
 
 require (
 	filippo.io/edwards25519 v1.1.0 // indirect
@@ -14,7 +18,6 @@ require (
 	github.com/gin-contrib/sse v0.1.0 // indirect
 	github.com/go-playground/locales v0.14.1 // indirect
 	github.com/go-playground/universal-translator v0.18.1 // indirect
-	github.com/go-playground/validator/v10 v10.20.0 // indirect
 	github.com/go-sql-driver/mysql v1.8.1 // indirect
 	github.com/goccy/go-json v0.10.2 // indirect
 	github.com/jinzhu/inflection v1.0.0 // indirect
@@ -29,7 +32,6 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect
-	golang.org/x/crypto v0.31.0 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 )
