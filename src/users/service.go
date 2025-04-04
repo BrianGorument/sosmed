@@ -45,7 +45,7 @@ func (s *userService) RegisterUser(req CreateUserRequest) (*UserResponse, error)
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 		CreatedAt: timenow,
-		UpdatedAt: timenow,
+		UpdateAt: timenow,
 	}
 	err = s.repo.Create(&user)
 	if err != nil {
@@ -73,7 +73,13 @@ func (s *userService) GetAllUsers() ([]UserResponse, error) {
 	return userResponses, nil
 }
 
-func (s *userService) LoginUser(req CreateUserRequest) (*UserResponse, error) {
+func (s *userService) LoginUser(req UserLoginRequest) (*UserResponse,  error) {
+	
+	token, err := utils.GetToken(req.Email)
+	if err != nil {
+		return nil, fmt.Errorf("failed to generate token: %v", err)
+	}
+	
 	existingUsers, _ := s.repo.FindAll()
 	for _, u := range existingUsers {
 		if u.Email == req.Email {
@@ -81,7 +87,8 @@ func (s *userService) LoginUser(req CreateUserRequest) (*UserResponse, error) {
 				ID:       u.ID,
 				Username: u.Username,
 				Email:    u.Email,
-			}, nil
+				JwtSecret: token,
+			},  nil
 		}
 	}
 

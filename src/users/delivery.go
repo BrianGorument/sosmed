@@ -82,7 +82,7 @@ func (h *UserHandler) RegisterUser(c *gin.Context) {
 }
 
 func (h *UserHandler) LoginUser(c *gin.Context) {
-	var req CreateUserRequest
+	var req UserLoginRequest	
 	if err := c.ShouldBindJSON(&req); err != nil {
 		h.logger.Warn("Invalid request:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body request"})
@@ -91,11 +91,11 @@ func (h *UserHandler) LoginUser(c *gin.Context) {
 
 	user, err := h.service.LoginUser(req)
 	if err != nil {
-		h.logger.Error("Failed to register user:", err)
+		h.logger.Error("Failed to login:", err)
 		resp := response.ErrorStruct{
 			Description:        response.DescriptionFailed,
 			Message:            err.Error(),
-			MessageDescription: "Failed to register user",
+			MessageDescription: "Failed to login",
 			Data:               err,
 		}
 		response.SendErrorResponse(c, http.StatusBadRequest, resp)
@@ -106,8 +106,8 @@ func (h *UserHandler) LoginUser(c *gin.Context) {
 		ResponseCode:       response.RCSuccess,
 		Description:        response.DescriptionSuccess,
 		Message:            response.DataSuccess,
-		MessageDescription: "Successfully registered user",
+		MessageDescription: "Successfully login",
 		Data:               user,
 	}
-	response.SendResponseSuccess(c, http.StatusCreated, succesresp)
+	response.SendResponseSuccess(c, http.StatusOK, succesresp)
 }
