@@ -75,7 +75,13 @@ func (s *userService) GetAllUsers() ([]UserResponse, error) {
 
 func (s *userService) LoginUser(req UserLoginRequest) (*UserResponse,  error) {
 	
-	token, err := utils.GetToken(req.Email)
+	eu, err := s.repo.FindByEmail(req.Email)
+	if err != nil {
+		return nil, err
+	}
+	
+	
+	token, err := utils.CreateJWTToken(eu.ID, eu.Username, eu.Email)
 	if err != nil {
 		return nil, fmt.Errorf("failed to generate token: %v", err)
 	}

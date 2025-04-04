@@ -6,7 +6,8 @@ import (
 	"sosmed/config"
 	"sosmed/database"
 	"sosmed/logger"
-	"sosmed/src/users"
+	posts "sosmed/src/posts"
+	users "sosmed/src/users"
 
 	"github.com/gin-gonic/gin"
 )
@@ -31,6 +32,7 @@ func main() {
 
 	// Register User Routes
 	users.RegisterRoutes(router, db, log)
+	posts.RegisterRoutes(router, db, log)
 
 	// Start Server
 	port := ":8888"

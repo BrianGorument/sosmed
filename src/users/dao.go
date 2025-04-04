@@ -3,7 +3,7 @@ package users
 import "time"
 
 type User struct {
-	ID        uint      `gorm:"primaryKey" json:"id"`
+	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	Username  string    `gorm:"unique;not null" json:"username"`
 	Email     string    `gorm:"unique;not null" json:"email"`
 	Password  string    `gorm:"not null" json:"-"`
@@ -11,7 +11,7 @@ type User struct {
 	FirstName string    `gorm:"not null" json:"first_name"`
 	LastName  string    `json:"last_name"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdateAt time.Time `json:"update_at"`
+	UpdateAt  time.Time `json:"update_at"`
 }
 
 func (User) TableName() string {

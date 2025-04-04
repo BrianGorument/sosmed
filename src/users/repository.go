@@ -33,3 +33,12 @@ func (r *userRepository) FindByID(id uint) (*User, error) {
 	}
 	return &user, nil
 }
+
+func (r *userRepository) FindByEmail(email string) (*User, error) {
+	var user User
+	err := r.db.First(&user, "email = ?", email).Error
+	if err != nil {
+		return nil, err
+	}
+	return &user, nil
+}

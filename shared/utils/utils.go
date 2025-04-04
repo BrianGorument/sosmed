@@ -1,6 +1,7 @@
 package utils
 
 import (
+	"errors"
 	"fmt"
 	"log"
 	"net/mail"
@@ -22,11 +23,13 @@ func getJwtSecret() []byte {
 	}
 	return []byte(jwtSecret)
 }
-func GetToken(email string) (string, error) {
+func CreateJWTToken(userID uint ,userName string, userEmail string) (string, error) {
 
 	// Generate JWT token
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"email": email,
+		"userId":    userID,
+		"userName":  userName,
+		"userEmail": userEmail,
 		"exp"  :  time.Now().Add(time.Hour * 1).Unix(),
 	})
 	
@@ -35,7 +38,7 @@ func GetToken(email string) (string, error) {
 	return token.SignedString(jwtSecret)
 }
 
-func ValidateToken(tokenStr string) (string, error) {
+func ValidateToken(tokenStr string) (jwt.MapClaims, error) {
 	jwtSecret := getJwtSecret()
 	token, err := jwt.Parse(tokenStr, func(token *jwt.Token) (interface{}, error) {
 		if _, ok := token.Method.(*jwt.SigningMethodHMAC); !ok {
@@ -44,12 +47,12 @@ func ValidateToken(tokenStr string) (string, error) {
 		return jwtSecret, nil
 	})
 	if err != nil || !token.Valid {
-		return "", fmt.Errorf("invalid token")
+		return nil, err
 	}
-	claims, ok := token.Claims.(jwt.MapClaims)
-	if !ok {
-		return "", fmt.Errorf("invalid claims")
+
+	// Extract claims
+	if claims, ok := token.Claims.(jwt.MapClaims); ok && token.Valid {
+		return claims, nil
 	}
-	username := claims["email"].(string)
-	return username, nil
+	return nil, errors.New("invalid token")
 }

@@ -10,4 +10,5 @@ type IUserRepository interface {
 	Create(user *User) error
 	FindAll() ([]User, error)
 	FindByID(id uint) (*User, error)
+	FindByEmail(email string) (*User, error)
 }
