@@ -1,4 +1,4 @@
-package posts
+package interactions
 
 import (
 	"sosmed/shared/utils"
@@ -10,16 +10,16 @@ import (
 
 // RegisterRoutes
 func RegisterRoutes(router *gin.Engine, db *gorm.DB, log *logrus.Logger) {
-	repo := NewPostRepository(db)
-	service := NewPostService(repo)
-	handler := NewPostingHandler(service, log)
+	repo := NewInteractionRepository(db)
+	service := NewInteractionsService(repo)
+	handler := NewInteractionHandler(service, log)
 
 	routersGroup := router.Group("v1")
 	{
-		postsGroup := routersGroup.Group("posts")
+		interactionsGroup := routersGroup.Group("activity")
 
 		// usersGroup.GET("/", handler.GetAllUsers)
-		postsGroup.POST("/postCreate", utils.JWTAuthMiddleware() , handler.CreatePost)
+		interactionsGroup.POST("/comment", utils.JWTAuthMiddleware() , handler.CreateComment)
 
 	}
 }

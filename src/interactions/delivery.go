@@ -1,4 +1,4 @@
-package posts
+package interactions
 
 import (
 	"net/http"
@@ -10,23 +10,20 @@ import (
 )
 
 
-type PostingHandler struct {
-	service IPostService
+type InteractionHandler struct {
+	service IInteractionService
 	logger  *logrus.Logger
 }
 
 
-func NewPostingHandler(service IPostService, logger *logrus.Logger) *PostingHandler {
-	return &PostingHandler{service, logger}
+func NewInteractionHandler(service IInteractionService, logger *logrus.Logger) *InteractionHandler {
+	return &InteractionHandler{service, logger}
 }
 
-func (h *PostingHandler) CreatePost(c *gin.Context) {
-	var req CreatePostRequest
-	var users UserData
-	
+func (h *InteractionHandler) CreateComment(c *gin.Context) {
+	var req InteractRequest
 	tokenString := c.GetHeader("Authorization")
 
-	// Verifikasi dan ambil klaim dari token
 	claims, err := utils.ValidateToken(tokenString)
 	if err != nil {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
@@ -38,9 +35,6 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid userId type"})
 		return
 	}
-
-	userName := claims["userName"].(string)
-	userEmail := claims["userEmail"].(string)
 	
 	if err := c.ShouldBindJSON(&req); err != nil {
 		h.logger.Warn("Invalid request:", err)
@@ -48,20 +42,17 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		return
 	}
 	
-	users = UserData{
+	user := UserData{
 		UserId:    userID,
-		UserEmail: userEmail,
-		Username:  userName,
 	}
 
-	
-	posting, err := h.service.CreatePosting(req , users)
+	comment, err := h.service.CreateCommentService(req, user)
 	if err != nil {
-		h.logger.Error("Failed to create post:", err)
+		h.logger.Error("Failed to comment on post:", err)
 		resp := response.ErrorStruct{
 			Description:        response.DescriptionFailed,
 			Message:            err.Error(),
-			MessageDescription: "Failed to create post",
+			MessageDescription: "Failed to comment on post",
 			Data:               err,
 		}
 		response.SendErrorResponse(c, http.StatusBadRequest, resp)
@@ -72,8 +63,8 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		ResponseCode:       response.RCSuccess,
 		Description:        response.DescriptionSuccess,
 		Message:            response.DataSuccess,
-		MessageDescription: "Successfully created post",
-		Data:               posting,
+		MessageDescription: "Successfully comment on post",
+		Data:               comment,
 	}
 	response.SendResponseSuccess(c, http.StatusOK, succesresp)
 	

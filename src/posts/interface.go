@@ -1,4 +1,4 @@
-package users
+package posts
 
 type IPostService interface {
 	CreatePosting(req CreatePostRequest, users UserData) (*PostResponse, error)

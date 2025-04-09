@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"log"
 	"net/mail"
+	"strings"
 	"time"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -72,4 +73,22 @@ func ConvertToInt(value interface{}) (int, error) {
 		return 0, fmt.Errorf("failed to convert %v to float64", value)
 	}
 	return int(floatVal), nil
+}
+
+func HandleMedia(media string) (string, error) {
+	if IsValidURL(media) {
+		return media, nil
+	}
+
+	// Check if the media is a base64 encoded string (assume image or video)
+	if strings.HasPrefix(media, "data:image") || strings.HasPrefix(media, "data:video") {
+		// Decode the base64 string and save as a file
+		decodedMedia, err := DecodeBase64ToFile(media)
+		if err != nil {
+			return "", errors.New("failed to decode base64 media")
+		}
+		return decodedMedia, nil
+	}
+
+	return "", errors.New("invalid media format")
 }

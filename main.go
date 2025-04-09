@@ -6,6 +6,7 @@ import (
 	"sosmed/config"
 	"sosmed/database"
 	"sosmed/logger"
+	"sosmed/src/interactions"
 	posts "sosmed/src/posts"
 	users "sosmed/src/users"
 
@@ -33,6 +34,7 @@ func main() {
 	// Register User Routes
 	users.RegisterRoutes(router, db, log)
 	posts.RegisterRoutes(router, db, log)
+	interactions.RegisterRoutes(router, db, log)
 
 	// Start Server
 	port := ":8888"

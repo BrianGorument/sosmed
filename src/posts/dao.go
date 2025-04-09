@@ -1,4 +1,4 @@
-package users
+package posts
 
 import "time"
 
@@ -12,7 +12,7 @@ type Post_Content struct {
 	LikeCount int       `gorm:"not null" json:"like_count"`
 	CategoryId int       `gorm:"not null" json:"category_id"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt  time.Time `json:"updated_at"`
+	UpdatedAt  time.Time `json:"update_at"`
 }
 
 func (Post_Content) TableName() string {

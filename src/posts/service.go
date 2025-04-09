@@ -1,10 +1,8 @@
-package users
+package posts
 
 import (
-	"errors"
 	"sosmed/shared/utils"
 	"strconv"
-	"strings"
 )
 
 // userService struct
@@ -20,7 +18,7 @@ func NewPostService(repo IPostRepository) IPostService {
 func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*PostResponse, error) {
 	var postres *PostResponse
 	
-	ImageURL, err := s.handleMedia(req.Image)
+	ImageURL, err := utils.HandleMedia(req.Image)
 	if err != nil {
 		return postres, err
 	}
@@ -42,22 +40,4 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 	}
 
 	return postres , nil
-}
-
-func (s *postService) handleMedia(media string) (string, error) {
-	if utils.IsValidURL(media) {
-		return media, nil
-	}
-
-	// Check if the media is a base64 encoded string (assume image or video)
-	if strings.HasPrefix(media, "data:image") || strings.HasPrefix(media, "data:video") {
-		// Decode the base64 string and save as a file
-		decodedMedia, err := utils.DecodeBase64ToFile(media)
-		if err != nil {
-			return "", errors.New("failed to decode base64 media")
-		}
-		return decodedMedia, nil
-	}
-
-	return "", errors.New("invalid media format")
 }

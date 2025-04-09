@@ -1,4 +1,4 @@
-package users
+package posts
 
 type CreatePostRequest struct {
 	Title   string `gorm:"not null" json:"title"`
