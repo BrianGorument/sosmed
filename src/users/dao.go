@@ -11,7 +11,7 @@ type User struct {
 	FirstName string    `gorm:"not null" json:"first_name"`
 	LastName  string    `json:"last_name"`
 	CreatedAt time.Time `json:"created_at"`
-	UpdateAt  time.Time `json:"update_at"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 func (User) TableName() string {

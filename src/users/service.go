@@ -45,7 +45,7 @@ func (s *userService) RegisterUser(req CreateUserRequest) (*UserResponse, error)
 		FirstName: req.FirstName,
 		LastName:  req.LastName,
 		CreatedAt: timenow,
-		UpdateAt: timenow,
+		UpdatedAt: timenow,
 	}
 	err = s.repo.Create(&user)
 	if err != nil {
