@@ -1,6 +1,9 @@
 package interactions
 
-import "sosmed/shared/utils"
+import (
+	"log"
+	"sosmed/shared/utils"
+)
 
 // userService struct
 type interactionsService struct {
@@ -12,9 +15,19 @@ func NewInteractionsService(repo IInteractionRepository) IInteractionService {
 	return &interactionsService{repo}
 }
 
-func (u *interactionsService) CreateCommentService(req InteractRequest, user UserData) (*InteractResponse, error) {
+func (u *interactionsService) InsertOrUpdateInteraction(req InteractRequest, user UserData) (*InteractResponse, error) {
 	var resp *InteractResponse
 	
+	tx, err := u.repo.BeginTransaction()
+	if err != nil {
+		return resp, err
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			u.repo.RollbackTransaction(tx)
+			log.Println("Transaction rolled back due to error:", r)
+		}
+	}()
 	
 	if req.Media != "" {
 		MediaURL, err := utils.HandleMedia(req.Media)
@@ -23,17 +36,37 @@ func (u *interactionsService) CreateCommentService(req InteractRequest, user Use
 		}
 		req.Media = MediaURL
 	}
-	
-	Post_Interactions := Post_Interactions{
-		PostID:    req.PostID,
-		UserID:    user.UserId,
-		Type:      req.Type,
-		Comment:   req.Comment,
-		Media:     req.Media,  // Image URL/path
+	if req.Comment != "" {
+		Post_Interactions := Comments{
+			PostID:    req.PostID,
+			UserID:    user.UserId,
+			Comment:   req.Comment,
+			Media:     req.Media,  // Image URL/path
+		}
+		
+		resp , err = u.repo.InsertComment(tx,Post_Interactions)
+		if err != nil {
+			u.repo.RollbackTransaction(tx)
+			return resp, err
+		}
 	}
-
-	resp , err := u.repo.InsertInteraction(Post_Interactions)
-	if err != nil {
+	
+	if req.Type != "" {
+		likes := Likes{
+			PostID:    req.PostID,
+			UserID:    user.UserId,
+			Type:      req.Type,
+		}
+		resp, err = u.repo.UpdateLikesInteraction(tx, likes)
+		if err != nil {
+			u.repo.RollbackTransaction(tx)
+			return resp, err
+		}
+	}	
+	//commits
+	if err := u.repo.CommitTransaction(tx); err != nil {
+		u.repo.RollbackTransaction(tx)
+		log.Println("Error committing transaction:", err)
 		return resp, err
 	}
 

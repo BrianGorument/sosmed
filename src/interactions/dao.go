@@ -2,17 +2,29 @@ package interactions
 
 import "time"
 
-type Post_Interactions struct {
+type Comments struct {
 	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
 	PostID    uint      `gorm:"unique;not null" json:"post_id"`
 	UserID    uint      `gorm:"not null" json:"user_id"`
-	Type  	  string    `gorm:"not null" json:"type"`
 	Comment   string    `json:"comment"` 
 	Media	  string    `json:"media"`
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"update_at"`
 }
 
-func (Post_Interactions) TableName() string {
-	return "post_interactions"
+func (Comments) TableName() string {
+	return "comments"
+}
+
+type Likes struct {
+	ID        uint      `gorm:"primaryKey;autoIncrement" json:"id"`
+	PostID    uint      `gorm:"unique;not null" json:"post_id"`
+	UserID    uint      `gorm:"not null" json:"user_id"`
+	Type	  string    `json:"type"`
+	CreatedAt time.Time `json:"created_at"`
+	UpdatedAt time.Time `json:"update_at"`
+}
+
+func (Likes) TableName() string {
+	return "likes"
 }

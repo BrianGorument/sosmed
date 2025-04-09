@@ -20,6 +20,7 @@ func NewInteractionHandler(service IInteractionService, logger *logrus.Logger) *
 	return &InteractionHandler{service, logger}
 }
 
+
 func (h *InteractionHandler) CreateComment(c *gin.Context) {
 	var req InteractRequest
 	tokenString := c.GetHeader("Authorization")
@@ -46,7 +47,7 @@ func (h *InteractionHandler) CreateComment(c *gin.Context) {
 		UserId:    userID,
 	}
 
-	comment, err := h.service.CreateCommentService(req, user)
+	comment, err := h.service.InsertOrUpdateInteraction(req, user)
 	if err != nil {
 		h.logger.Error("Failed to comment on post:", err)
 		resp := response.ErrorStruct{
@@ -62,7 +63,7 @@ func (h *InteractionHandler) CreateComment(c *gin.Context) {
 	succesresp := response.Response{
 		ResponseCode:       response.RCSuccess,
 		Description:        response.DescriptionSuccess,
-		Message:            response.DataSuccess,
+		Message:            response.InsertsUpdateSuccess,
 		MessageDescription: "Successfully comment on post",
 		Data:               comment,
 	}

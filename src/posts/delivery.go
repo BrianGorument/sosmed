@@ -71,7 +71,7 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 	succesresp := response.Response{
 		ResponseCode:       response.RCSuccess,
 		Description:        response.DescriptionSuccess,
-		Message:            response.DataSuccess,
+		Message:            response.SuccessInsert,
 		MessageDescription: "Successfully created post",
 		Data:               posting,
 	}

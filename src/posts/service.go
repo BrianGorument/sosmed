@@ -1,7 +1,9 @@
 package posts
 
 import (
+	"log"
 	"sosmed/shared/utils"
+	"sosmed/src/interactions"
 	"strconv"
 )
 
@@ -22,6 +24,19 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 	if err != nil {
 		return postres, err
 	}
+	
+	tx, err := s.repo.BeginTransaction()
+	if err != nil {
+		return postres, err
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			s.repo.RollbackTransaction(tx)
+			log.Println("Transaction rolled back due to error:", r)
+		}
+	}()
+	
+	
 	stringuserID := strconv.Itoa(int(users.UserId))
 
 	post := Post_Content{
@@ -34,8 +49,27 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 		CategoryId: 0,
 	}
 	
-	postres , err = s.repo.InsertPosting(post)
+	postres , err = s.repo.InsertPosting(tx,post)
 	if err != nil {
+		s.repo.RollbackTransaction(tx)
+		return postres, err
+	}
+	
+	crtDatalikes := interactions.Likes{
+		PostID:    postres.Post_ID,
+		UserID:    users.UserId,
+		Type: 	   "NULL",
+	}
+	
+	err = s.repo.InsertLikesTable(tx , crtDatalikes)
+	if err != nil {
+		s.repo.RollbackTransaction(tx)
+		return postres, err
+	}
+	
+	if err := s.repo.CommitTransaction(tx); err != nil {
+		s.repo.RollbackTransaction(tx)
+		log.Println("Error committing transaction:", err)
 		return postres, err
 	}
 
