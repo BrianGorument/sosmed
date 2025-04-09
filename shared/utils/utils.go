@@ -56,3 +56,20 @@ func ValidateToken(tokenStr string) (jwt.MapClaims, error) {
 	}
 	return nil, errors.New("invalid token")
 }
+
+
+func ConvertToUint(value interface{}) (uint, error) {
+	floatVal, ok := value.(float64)
+	if !ok {
+		return 0, fmt.Errorf("failed to convert %v to float64", value)
+	}
+	return uint(floatVal), nil
+}
+
+func ConvertToInt(value interface{}) (int, error) {
+	floatVal, ok := value.(float64)
+	if !ok {
+		return 0, fmt.Errorf("failed to convert %v to float64", value)
+	}
+	return int(floatVal), nil
+}

@@ -24,7 +24,7 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 	if err != nil {
 		return postres, err
 	}
-	stringuserID := strconv.FormatFloat(users.UserId, 'f', 6, 64)
+	stringuserID := strconv.Itoa(int(users.UserId))
 
 	post := Post_Content{
 		UserID:   stringuserID,

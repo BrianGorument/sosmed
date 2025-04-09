@@ -18,7 +18,7 @@ type PostResponse struct {
 }
 
 type UserData struct {
-	UserId    float64 `json:"user_id"`
-	Username  string  `json:"user_name"`
-	UserEmail string  `json:"user_email"`
+	UserId    uint   `json:"user_id"`
+	Username  string `json:"user_name"`
+	UserEmail string `json:"user_email"`
 }

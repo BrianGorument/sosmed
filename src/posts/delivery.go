@@ -32,9 +32,13 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
 		return
 	}
+	
+	userID, err := utils.ConvertToUint(claims["userId"])
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid userId type"})
+		return
+	}
 
-	// Ambil klaim dari token
-	userID := claims["userId"].(float64) // Sesuaikan dengan klaim yang ada di token
 	userName := claims["userName"].(string)
 	userEmail := claims["userEmail"].(string)
 	
@@ -43,15 +47,6 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body request"})
 		return
 	}
-	
-	// Get userID from JWT context
-	// userID, exists := c.Get("userId")
-	// userName, exists := c.Get("userName")
-	// userEmail, exists := c.Get("userEmail")
-	// if !exists {
-	// 	c.JSON(http.StatusUnauthorized, gin.H{"error": "User not authenticated"})
-	// 	return
-	// }
 	
 	users = UserData{
 		UserId:    userID,
