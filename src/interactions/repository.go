@@ -5,6 +5,7 @@ import (
 	"time"
 
 	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
 )
 
 // userRepository struct
@@ -47,6 +48,8 @@ func (r *interactionRepository) InsertComment(tx *gorm.DB, input Comments) (*Int
 		ID: input.ID ,
 		PostID: input.PostID,
 		UserID: input.UserID,
+		Comment: input.Comment,
+		Media: input.Media,
 		}, nil
 }
 
@@ -71,3 +74,22 @@ func (r *interactionRepository) UpdateLikesInteraction(tx *gorm.DB, input Likes)
 		}, nil
 }
 
+func (r *interactionRepository) DeleteCommentByID(tx *gorm.DB,comment Comments) (*InteractResponse, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
+	defer cancel()
+	var comments []Comments
+	
+	if err := tx.WithContext(ctx).Clauses(clause.Returning{}).Where("post_id = ? and id = ?", comment.PostID ,comment.ID).Delete(&comments).Error; err != nil {
+		return nil, err
+	}
+		
+	tx.Clauses(clause.Returning{Columns: []clause.Column{{Name: "comment"}, {Name: "post_id"},{Name: "user_id"},{Name: "comment"},{Name: "media"}}}).Where("post_id = ? and id = ?", comment.PostID ,comment.ID).Delete(&comments)
+
+	return &InteractResponse{
+		ID: comment.ID ,
+		PostID: comment.PostID,
+		UserID: comment.UserID,
+		Comment: comment.Comment,
+		}, nil
+		
+}

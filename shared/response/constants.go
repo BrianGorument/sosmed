@@ -15,6 +15,7 @@ const (
 	SuccessUpdate        = "Data updated successfully"
 	SuccessInsert        = "Data inserted successfully"
 	InsertsUpdateSuccess = "Data inserted or Updated successfully"
+	SuccessDelete        = "Data deleted successfully"
 	DataSuccessDesc      = "The requested data has been successfully retrieved"
 	DataNotFound         = "Data not found"
 	DataNotFoundDesc     = "The requested data could not be found"

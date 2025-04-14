@@ -43,7 +43,7 @@ func ErrorHandler(ctx *gin.Context, logger *logrus.Logger, req interface{}, err 
 
 	resp := ErrorStruct{
 		HTTPCode:           http.StatusInternalServerError,
-		Code:               RCServerError,
+		ResponseCode:       RCServerError,
 		Description:        DescriptionFailed,
 		Message:            ServerError,
 		MessageDescription: ServerErrorDesc,

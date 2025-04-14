@@ -8,11 +8,17 @@ type InteractRequest struct {
 }
 
 type InteractResponse struct {
-	ID     uint `gorm:"primaryKey;autoIncrement" json:"id"`
-	PostID uint `gorm:"unique;not null" json:"post_id"`
-	UserID uint `gorm:"not null" json:"user_id"`
+	ID      uint   `gorm:"primaryKey;autoIncrement" json:"id"`
+	PostID  uint   `gorm:"unique;not null" json:"post_id"`
+	UserID  uint   `gorm:"not null" json:"user_id"`
+	Comment string `json:"comment"`
+	Media   string `json:"media"`
 }
 
+type DeleteCommentRequest struct {
+	ID     uint `gorm:"unique;not null" json:"id"`
+	PostID uint `gorm:"unique;not null" json:"post_id"`
+}
 type UserData struct {
 	UserId    uint   `json:"user_id"`
 	Username  string `json:"user_name"`

@@ -31,7 +31,7 @@ func (h *UserHandler) GetAllUsers(c *gin.Context) {
 	if len(users) == 0 {
 		resp := response.ErrorStruct{
 			HTTPCode:           http.StatusNotFound,
-			Code:               response.RCDataNotFound,
+			ResponseCode:       response.RCDataNotFound,
 			Description:        response.DescriptionFailed,
 			Message:            response.DataNotFound,
 			MessageDescription: "Users data is empty and not found",

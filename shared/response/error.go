@@ -3,7 +3,7 @@ package response
 // ErrorStruct model
 type ErrorStruct struct {
 	HTTPCode           int         `json:"-"`
-	Code               string      `json:"code"`
+	ResponseCode       string      `json:"rc"`
 	Description        string      `json:"desc,omitempty"`
 	Message            string      `json:"msg"`
 	MessageDescription string      `json:"msg_desc"`

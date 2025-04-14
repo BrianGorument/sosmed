@@ -72,3 +72,38 @@ func (u *interactionsService) InsertOrUpdateInteraction(req InteractRequest, use
 
 	return resp , nil
 }
+
+func (u *interactionsService) DeleteCommentOrMedia(req DeleteCommentRequest, user UserData) (*InteractResponse, error) {
+	var resp *InteractResponse
+	
+	
+	tx, err := u.repo.BeginTransaction()
+	if err != nil {
+		return resp, err
+	}
+	defer func() {
+		if r := recover(); r != nil {
+			u.repo.RollbackTransaction(tx)
+			log.Println("Transaction rolled back due to error:", r)
+		}
+	}()	
+		deleteComment := Comments{
+			ID :       req.ID,
+			PostID:    req.PostID,
+		}
+		
+		resp , err = u.repo.DeleteCommentByID(tx,deleteComment)
+		if err != nil {
+			u.repo.RollbackTransaction(tx)
+			return resp, err
+		}
+	
+	//commits
+	if err := u.repo.CommitTransaction(tx); err != nil {
+		u.repo.RollbackTransaction(tx)
+		log.Println("Error committing transaction:", err)
+		return resp, err
+	}
+
+	return resp , nil
+}
