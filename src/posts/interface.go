@@ -8,6 +8,7 @@ import (
 
 type IPostService interface {
 	CreatePosting(req CreatePostRequest, users UserData) (*PostResponse, error)
+	GetAllPosts(filter GetAllPostsFilterRequest , user UserData) (*GetAllPostsResponse , error)
 }
 
 type IPostRepository interface {
@@ -16,4 +17,5 @@ type IPostRepository interface {
 	RollbackTransaction(tx *gorm.DB) error 
 	InsertPosting(tx *gorm.DB, input Post_Content) (*PostResponse, error)
 	InsertLikesTable(tx *gorm.DB, input interactions.Likes) error
+	FindAll(filter GetAllPostsFilterRequest, user UserData) (*GetAllPostsResponse, error)
 }

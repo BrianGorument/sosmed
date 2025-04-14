@@ -4,6 +4,7 @@ import (
 	"net/http"
 	"sosmed/shared/response"
 	"sosmed/shared/utils"
+	"strconv"
 
 	"github.com/gin-gonic/gin"
 	"github.com/sirupsen/logrus"
@@ -79,4 +80,61 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 	
 	
 	
+}
+func (h *PostingHandler) GetAllPosts(c *gin.Context) {
+	var filter GetAllPostsFilterRequest
+	filter.Limit , _ = strconv.Atoi(c.DefaultQuery("limit", "10"))
+	filter.Page , _ = strconv.Atoi(c.DefaultQuery("page", "1"))
+	filter.Title = c.Query("title")
+	filter.ByUserName = c.Query("userName")
+	
+	intId , _ := strconv.Atoi(c.Param("id"))
+	filter.PostID = uint(intId)
+	
+	var users UserData
+	tokenString := c.GetHeader("Authorization")
+
+	// Verifikasi dan ambil klaim dari token
+	claims, err := utils.ValidateToken(tokenString)
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid token"})
+		return
+	}
+	
+	userID, err := utils.ConvertToUint(claims["userId"])
+	if err != nil {
+		c.JSON(http.StatusUnauthorized, gin.H{"error": "Invalid userId type"})
+		return
+	}
+
+	userName := claims["userName"].(string)
+	userEmail := claims["userEmail"].(string)
+	
+	users = UserData{
+		UserId:    userID,
+		UserEmail: userEmail,
+		Username:  userName,
+	}
+	
+	result, err := h.service.GetAllPosts(filter , users)
+	if err != nil {
+		h.logger.Error("Failed to get posting data:", err)
+		resp := response.ErrorStruct{
+			Description:        response.DescriptionFailed,
+			Message:            err.Error(),
+			MessageDescription: "Failed to get posting data",
+			Data:               err,
+		}
+		response.SendErrorResponse(c, http.StatusBadRequest, resp)
+		return
+	}
+	
+	succesresp := response.Response{
+		ResponseCode:       response.RCSuccess,
+		Description:        response.DescriptionSuccess,
+		Message:            response.DataSuccess,
+		MessageDescription: "Successfully created post",
+		Data:               result,
+	}
+	response.SendResponseSuccess(c, http.StatusOK, succesresp)
 }

@@ -18,7 +18,6 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, log *logrus.Logger) {
 	{
 		interactionsGroup := routersGroup.Group("activity")
 
-		// usersGroup.GET("/", handler.GetAllUsers)
 		interactionsGroup.POST("/comment", utils.JWTAuthMiddleware() , handler.CreateComment)
 		interactionsGroup.POST("/deleteComment", utils.JWTAuthMiddleware() , handler.DeleteComment)
 

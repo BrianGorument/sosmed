@@ -75,3 +75,7 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 
 	return postres , nil
 }
+
+func (s *postService) GetAllPosts(filter GetAllPostsFilterRequest , user UserData) (*GetAllPostsResponse , error) {
+	return s.repo.FindAll(filter , user)
+}
