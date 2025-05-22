@@ -3,6 +3,7 @@ module sosmed
 go 1.23.1
 
 require (
+	github.com/disintegration/imaging v1.6.2
 	github.com/go-playground/validator/v10 v10.20.0
 	github.com/spf13/viper v1.19.0
 	golang.org/x/crypto v0.31.0
@@ -32,6 +33,7 @@ require (
 	github.com/twitchyliquid64/golang-asm v0.15.1 // indirect
 	github.com/ugorji/go/codec v1.2.12 // indirect
 	golang.org/x/arch v0.8.0 // indirect
+	golang.org/x/image v0.0.0-20191009234506-e7c1f5e7dbb8 // indirect
 	golang.org/x/net v0.33.0 // indirect
 	google.golang.org/protobuf v1.34.2 // indirect
 )
@@ -40,7 +42,6 @@ require (
 	github.com/fsnotify/fsnotify v1.7.0 // indirect
 	github.com/gin-gonic/gin v1.10.0
 	github.com/golang-jwt/jwt/v5 v5.2.2
-	github.com/google/uuid v1.6.0
 	github.com/hashicorp/hcl v1.0.0 // indirect
 	github.com/magiconair/properties v1.8.7 // indirect
 	github.com/mitchellh/mapstructure v1.5.0 // indirect

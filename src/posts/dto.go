@@ -3,7 +3,6 @@ package posts
 type CreatePostRequest struct {
 	Title   string `gorm:"not null" json:"title"`
 	Content string `gorm:"not null" json:"content"`
-	Image   string `gorm:"not null" json:"image"`
 	Media   string `gorm:"not null" json:"media"`
 }
 

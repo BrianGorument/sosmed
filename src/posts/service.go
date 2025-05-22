@@ -2,7 +2,6 @@ package posts
 
 import (
 	"log"
-	"sosmed/shared/utils"
 	"sosmed/src/interactions"
 	"strconv"
 )
@@ -19,11 +18,6 @@ func NewPostService(repo IPostRepository) IPostService {
 
 func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*PostResponse, error) {
 	var postres *PostResponse
-	
-	ImageURL, err := utils.HandleMedia(req.Image)
-	if err != nil {
-		return postres, err
-	}
 	
 	tx, err := s.repo.BeginTransaction()
 	if err != nil {
@@ -43,8 +37,7 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 		UserID:   stringuserID,
 		Title:    req.Title,
 		Content:  req.Content,
-		Image:    ImageURL,  // Image URL/path
-		//Media:    mediaURL,     // Media URL/path (video/image URL or file path)
+		Media:    req.Media,  // Image URL/path
 		LikeCount: 0,
 		CategoryId: 0,
 	}
@@ -79,3 +72,4 @@ func (s *postService) CreatePosting(req CreatePostRequest , users UserData) (*Po
 func (s *postService) GetAllPosts(filter GetAllPostsFilterRequest , user UserData) (*GetAllPostsResponse , error) {
 	return s.repo.FindAll(filter , user)
 }
+

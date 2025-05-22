@@ -47,8 +47,7 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		h.logger.Warn("Invalid request:", err)
 		c.JSON(http.StatusBadRequest, gin.H{"error": "Invalid Body request"})
 		return
-	}
-	
+	}	
 	users = UserData{
 		UserId:    userID,
 		UserEmail: userEmail,
@@ -77,9 +76,6 @@ func (h *PostingHandler) CreatePost(c *gin.Context) {
 		Data:               posting,
 	}
 	response.SendResponseSuccess(c, http.StatusOK, succesresp)
-	
-	
-	
 }
 func (h *PostingHandler) GetAllPosts(c *gin.Context) {
 	var filter GetAllPostsFilterRequest
@@ -137,4 +133,23 @@ func (h *PostingHandler) GetAllPosts(c *gin.Context) {
 		Data:               result,
 	}
 	response.SendResponseSuccess(c, http.StatusOK, succesresp)
+}
+func (h *PostingHandler) UploadMedia(c *gin.Context) {
+    // Ambil file dari form-data
+    file, err := c.FormFile("media")
+    if err != nil {
+        h.logger.Error("Failed to get file: ", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": "Media file is required"})
+        return
+    }
+    // Panggil fungsi util untuk upload dan kompresi
+    mediaPath, err := utils.UploadAndCompressMedia(file)
+    if err != nil {
+        h.logger.Error("Failed to upload media: ", err)
+        c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+        return
+    }
+
+    h.logger.Info("Media uploaded successfully: ", mediaPath)
+    c.JSON(http.StatusOK, gin.H{"message": "Media uploaded successfully", "media_url": mediaPath})
 }

@@ -7,7 +7,6 @@ type Post_Content struct {
 	UserID    string      `gorm:"unique;not null" json:"user_id"`
 	Title     string    `gorm:"not null" json:"title"`
 	Content   string    `gorm:"not null" json:"content"`
-	Image 	  string    `gorm:"not null" json:"image"` 
 	Media	  string    `gorm:"not null" json:"media"`
 	LikeCount int       `gorm:"not null" json:"like_count"`
 	CategoryId int       `gorm:"not null" json:"category_id"`
