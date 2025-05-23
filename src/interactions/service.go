@@ -29,13 +29,6 @@ func (u *interactionsService) InsertOrUpdateInteraction(req InteractRequest, use
 		}
 	}()
 	
-	if req.Media != "" {
-		MediaURL, err := utils.HandleMedia(req.Media)
-		if err != nil {
-			return resp, err
-		}
-		req.Media = MediaURL
-	}
 	if req.Comment != "" {
 		Post_Interactions := Comments{
 			PostID:    req.PostID,

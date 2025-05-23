@@ -80,23 +80,6 @@ func ConvertToInt(value interface{}) (int, error) {
 	return int(floatVal), nil
 }
 
-func HandleMedia(media string) (string, error) {
-	if IsValidURL(media) {
-		return media, nil
-	}
-
-	// Check if the media is a base64 encoded string (assume image or video)
-	if strings.HasPrefix(media, "data:image") || strings.HasPrefix(media, "data:video") {
-		// Decode the base64 string and save as a file
-		decodedMedia, err := DecodeBase64ToFile(media)
-		if err != nil {
-			return "", errors.New("failed to decode base64 media")
-		}
-		return decodedMedia, nil
-	}
-
-	return "", errors.New("invalid media format")
-}
 func UploadAndCompressMedia(fileHeader *multipart.FileHeader) (string, error) {
     if fileHeader == nil {
         return "", nil
