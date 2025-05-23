@@ -35,7 +35,7 @@ type PagiPostsRespone struct {
 	UserID     string `json:"user_id"`
 	PosterName string `json:"poster_name"`
 	Title      string `json:"title"`
-	Image      string `json:"image"`
+	Media      string `json:"media"`
 	LikeCount  int    `json:"like_count"`
 	CategoryID int    `json:"category_id"`
 	CreatedAt  string `json:"created_at"`

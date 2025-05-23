@@ -20,7 +20,7 @@ func RegisterRoutes(router *gin.Engine, db *gorm.DB, log *logrus.Logger) {
 
 		// usersGroup.GET("/", handler.GetAllUsers)
 		postsGroup.POST("/postCreate", utils.JWTAuthMiddleware() , handler.CreatePost)
-		postsGroup.GET("/posts/:id", utils.JWTAuthMiddleware(),handler.GetAllPosts)
+		postsGroup.GET("/posts", utils.JWTAuthMiddleware(),handler.GetAllPosts)
 		postsGroup.POST("/upload/media", utils.JWTAuthMiddleware() , handler.UploadMedia)
 
 	}

@@ -84,7 +84,7 @@ func (h *PostingHandler) GetAllPosts(c *gin.Context) {
 	filter.Title = c.Query("title")
 	filter.ByUserName = c.Query("userName")
 	
-	intId , _ := strconv.Atoi(c.Param("id"))
+	intId , _ := strconv.Atoi(c.Query("id"))
 	filter.PostID = uint(intId)
 	
 	var users UserData

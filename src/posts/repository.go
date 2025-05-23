@@ -66,9 +66,10 @@ func (r *postRepository) FindAll(filter GetAllPostsFilterRequest, user UserData)
 	var totalCount int64
 	ctx, cancel := context.WithTimeout(context.Background(), 5*time.Second)
 	defer cancel()
+
 	
 	db := r.db.WithContext(ctx).Table("post_content")
-	db.Select("post_content.id , post_content.user_id,(u.username) as poster_name, post_content.title , post_content.image , post_content.like_count , post_content.category_id , post_content.created_at , post_content.updated_at").
+	db.Select("post_content.id , post_content.user_id,(u.username) as poster_name, post_content.title , post_content.media , post_content.like_count , post_content.category_id , post_content.created_at , post_content.updated_at").
 	Joins("inner join users u on post_content.user_id  = u.id")
 	
 	
@@ -105,7 +106,7 @@ func (r *postRepository) FindAll(filter GetAllPostsFilterRequest, user UserData)
 			UserID:      post.UserID,
 			PosterName:  post.PosterName,  
 			Title:       post.Title,
-			Image:       post.Image,
+			Media:       post.Media,
 			LikeCount:   post.LikeCount,
 			CategoryID:  post.CategoryID,
 			CreatedAt:   post.CreatedAt,
