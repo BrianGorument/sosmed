@@ -6,7 +6,6 @@ import (
 	"gorm.io/gorm"
 )
 
-// RegisterRoutes
 func RegisterRoutes(router *gin.Engine, db *gorm.DB, log *logrus.Logger) {
 	repo := NewUserRepository(db)
 	service := NewUserService(repo)

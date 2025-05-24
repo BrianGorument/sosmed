@@ -2,7 +2,6 @@ package interactions
 
 import (
 	"log"
-	"sosmed/shared/utils"
 )
 
 // userService struct

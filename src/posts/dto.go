@@ -22,6 +22,7 @@ type GetAllPostsFilterRequest struct {
 	Page       int    `json:"page"`
 	Title      string `json:"title"`
 	ByUserName string `json:"username"`
+	ByUserID   uint   `json:"user_id"`
 }
 
 type UserData struct {
@@ -34,7 +35,7 @@ type PagiPostsRespone struct {
 	ID         uint   `json:"id"`
 	UserID     string `json:"user_id"`
 	PosterName string `json:"poster_name"`
-	Title      string `json:"title"`
+	Post_Title string `json:"post_title"`
 	Media      string `json:"media"`
 	LikeCount  int    `json:"like_count"`
 	CategoryID int    `json:"category_id"`

@@ -9,7 +9,6 @@ import (
 	"net/mail"
 	"os"
 	"path/filepath"
-	"strings"
 	"time"
 
 	"github.com/disintegration/imaging"

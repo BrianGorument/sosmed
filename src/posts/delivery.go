@@ -83,10 +83,13 @@ func (h *PostingHandler) GetAllPosts(c *gin.Context) {
 	filter.Page , _ = strconv.Atoi(c.DefaultQuery("page", "1"))
 	filter.Title = c.Query("title")
 	filter.ByUserName = c.Query("userName")
+
+	intuserid , _ := strconv.Atoi(c.Query("userId"))
+	filter.ByUserID = uint(intuserid)
 	
 	intId , _ := strconv.Atoi(c.Query("id"))
 	filter.PostID = uint(intId)
-	
+		
 	var users UserData
 	tokenString := c.GetHeader("Authorization")
 

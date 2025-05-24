@@ -69,7 +69,7 @@ func (r *postRepository) FindAll(filter GetAllPostsFilterRequest, user UserData)
 
 	
 	db := r.db.WithContext(ctx).Table("post_content")
-	db.Select("post_content.id , post_content.user_id,(u.username) as poster_name, post_content.title , post_content.media , post_content.like_count , post_content.category_id , post_content.created_at , post_content.updated_at").
+	db.Select("post_content.id , post_content.user_id,(u.username) as poster_name, (post_content.title) as post_title , post_content.media , post_content.like_count , post_content.category_id , post_content.created_at , post_content.updated_at").
 	Joins("inner join users u on post_content.user_id  = u.id")
 	
 	
@@ -86,6 +86,9 @@ func (r *postRepository) FindAll(filter GetAllPostsFilterRequest, user UserData)
 		db = db.Where("u.first_name like ? or u.username like ?", likePattern , likePattern)
 	}
 	
+	if filter.ByUserID != 0 {
+		db = db.Where("u.id = ?", filter.ByUserID)
+	}
 	
 	// Count the total number of posts (for pagination purposes)
 	err := db.Count(&totalCount).Error
@@ -105,7 +108,7 @@ func (r *postRepository) FindAll(filter GetAllPostsFilterRequest, user UserData)
 			ID:          post.ID,
 			UserID:      post.UserID,
 			PosterName:  post.PosterName,  
-			Title:       post.Title,
+			Post_Title:  post.Post_Title,
 			Media:       post.Media,
 			LikeCount:   post.LikeCount,
 			CategoryID:  post.CategoryID,
